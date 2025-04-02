@@ -262,10 +262,10 @@ def train_model(labelled_epochs_power_bands_df, train_type, model_id, learning_r
         
         print("Training Neural Network Model...")
         
-        '''with tqdm(total=total, desc="Progress", unit="%", ncols=80) as pbar:
+        with tqdm(total=total, desc="Progress", unit="%", ncols=80) as pbar:
             for _ in range(total):
                 time.sleep(interval)
-                pbar.update(1)'''
+                pbar.update(1)
         
         print("Model Trained, loading metrics and results...")
 
