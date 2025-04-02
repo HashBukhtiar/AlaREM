@@ -7,15 +7,15 @@ def main():
 
     model = train_model(
         labelled_epochs_power_bands_df, 
-        train_type='rapid',
-        model_id=32, 
+        train_type='cross-validation',
+        model_id=34, 
         use_all_regions=True,
         use_ratios=True, 
-        hidden_layer_sizes=(100, 50), 
+        hidden_layer_sizes=(256, 128, 64, 32), 
         activation='relu',
+        learning_rate='adaptive',
         solver='adam',
         max_iter=200,
-        lambda_l2=0.0001 
     )
 
     return
