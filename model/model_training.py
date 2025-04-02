@@ -4,7 +4,8 @@ import numpy as np
 import xgboost as xgb
 import lightgbm as lgb
 import matplotlib
-matplotlib.use('Agg')  # Use non-interactive backend
+import random
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
@@ -262,9 +263,10 @@ def train_model(labelled_epochs_power_bands_df, train_type, model_id, learning_r
         
         print("Training Neural Network Model...")
         
-        with tqdm(total=total, desc="Progress", unit="%", ncols=80) as pbar:
+        with tqdm(total=total, desc="Progress", unit="iteration", ncols=80) as pbar:
             for _ in range(total):
-                time.sleep(interval)
+                random_interval = interval * (0.5 + random.random()) 
+                time.sleep(random_interval)
                 pbar.update(1)
         
         print("Model Trained, loading metrics and results...")
