@@ -8,10 +8,10 @@ def main():
     model = train_model(
         labelled_epochs_power_bands_df, 
         train_type='rapid',
-        model_id=19,
-        learning_rate=0.1,
-        n_estimators=500,      
-        max_depth=8,           
+        model_id=31,
+        learning_rate=0.01,
+        n_estimators=1000,      
+        max_depth=10,           
         lambda_l1=0.1,
         lambda_l2=0.1,
         use_all_regions=True
