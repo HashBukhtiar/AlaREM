@@ -12,7 +12,7 @@ from sklearn.metrics import accuracy_score, roc_auc_score, roc_curve, precision_
 from tqdm import tqdm
 
 
-def train_model(labelled_epochs_power_bands_df, train_type, learning_rate=0.1, 
+def train_model(labelled_epochs_power_bands_df, train_type, model_id, learning_rate=0.1, 
                 n_estimators=100, max_depth=-1, num_leaves=31, lambda_l1=0.0, lambda_l2=0.0, 
                 use_all_regions=False):
     start_time = time.time()
@@ -30,16 +30,14 @@ def train_model(labelled_epochs_power_bands_df, train_type, learning_rate=0.1,
     print(f"Using {len(features)} features: {features}")
     label = 'sleep_stage'
 
-    model = lgb.LGBMClassifier(
-        objective='binary',
-        n_estimators=n_estimators,
-        learning_rate=learning_rate,
-        max_depth=max_depth,
-        num_leaves=num_leaves,
-        boosting_type='gbdt',
-        lambda_l1=lambda_l1,
-        lambda_l2=lambda_l2
-    )
+    model = xgb.XGBClassifier(
+            objective='binary:logistic',
+            n_estimators=n_estimators,
+            learning_rate=learning_rate,
+            max_depth=max_depth,
+            reg_alpha=lambda_l1,
+            reg_lambda=lambda_l2
+        )
 
     if train_type == 'rapid':
 
@@ -250,6 +248,9 @@ def train_model(labelled_epochs_power_bands_df, train_type, learning_rate=0.1,
     axes[1, 1].set_title('Metrics Summary')
 
     plt.tight_layout(pad=3.0)
-    plt.show()
+    plot_filename = f"test{model_id}.png"
+    plt.savefig(plot_filename)
+    print(f"Plot saved as: {plot_filename}")
+    plt.close()
 
     return model
