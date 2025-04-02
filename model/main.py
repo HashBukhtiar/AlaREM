@@ -10,7 +10,7 @@ def main():
     # print(labelled_epochs_power_bands_df['sleep_stage'].value_counts())
 
     # Train the model
-    model = train_model(labelled_epochs_power_bands_df, train_type='cross_validation')
+    model = train_model(labelled_epochs_power_bands_df, train_type='rapid')
 
     return
 
