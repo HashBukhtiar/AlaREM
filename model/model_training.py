@@ -1,22 +1,45 @@
 import time
 import pandas as pd
+import numpy as np
 import xgboost as xgb
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, roc_auc_score, roc_curve, precision_score, recall_score, f1_score, log_loss, confusion_matrix, precision_recall_curve, auc, matthews_corrcoef
+import lightgbm as lgb
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, roc_auc_score, roc_curve, precision_score, recall_score, f1_score, log_loss, confusion_matrix, precision_recall_curve, auc, matthews_corrcoef
 from tqdm import tqdm
 
-def train_model(labelled_epochs_power_bands_df, train_type):
+
+def train_model(labelled_epochs_power_bands_df, train_type, learning_rate=0.1, 
+                n_estimators=100, max_depth=-1, num_leaves=31, lambda_l1=0.0, lambda_l2=0.0, 
+                use_all_regions=False):
     start_time = time.time()
     train_df = labelled_epochs_power_bands_df.copy(deep=True)
     train_df['person'] = train_df['epochId'].apply(lambda x: x.split('-')[0][0] + x.split('-')[1])
     train_df = train_df[~train_df['sleep_stage'].isin(['N', '?', 'M'])]
 
-    features = ['anterior_subdelta', 'anterior_delta', 'anterior_theta', 'anterior_alpha', 'anterior_beta', 'anterior_gamma']
+    if use_all_regions:
+        all_columns = train_df.columns
+        features = [col for col in all_columns if any(region in col for region in ['anterior_', 'central_', 'posterior_']) 
+                   and any(band in col for band in ['subdelta', 'delta', 'theta', 'alpha', 'beta', 'gamma'])]
+    else:
+        features = ['anterior_subdelta', 'anterior_delta', 'anterior_theta', 'anterior_alpha', 'anterior_beta', 'anterior_gamma']
+    
+    print(f"Using {len(features)} features: {features}")
     label = 'sleep_stage'
 
-    model = xgb.XGBClassifier(objective='binary:logistic', n_estimators=100, learning_rate=0.1, max_depth=5)
+    model = lgb.LGBMClassifier(
+        objective='binary',
+        n_estimators=n_estimators,
+        learning_rate=learning_rate,
+        max_depth=max_depth,
+        num_leaves=num_leaves,
+        boosting_type='gbdt',
+        lambda_l1=lambda_l1,
+        lambda_l2=lambda_l2
+    )
 
     if train_type == 'rapid':
 
