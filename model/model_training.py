@@ -9,12 +9,15 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, roc_auc_score, roc_curve, precision_score, recall_score, f1_score, log_loss, confusion_matrix, precision_recall_curve, auc, matthews_corrcoef
+from sklearn.neural_network import MLPClassifier
+from sklearn.preprocessing import StandardScaler
 from tqdm import tqdm
 
 
 def train_model(labelled_epochs_power_bands_df, train_type, model_id, learning_rate=0.1, 
                 n_estimators=100, max_depth=-1, num_leaves=31, lambda_l1=0.0, lambda_l2=0.0, 
-                use_all_regions=False):
+                use_all_regions=False, use_ratios=False, 
+                hidden_layer_sizes=(100, 50), activation='relu', solver='adam', max_iter=200):
     start_time = time.time()
     train_df = labelled_epochs_power_bands_df.copy(deep=True)
     train_df['person'] = train_df['epochId'].apply(lambda x: x.split('-')[0][0] + x.split('-')[1])
@@ -30,14 +33,13 @@ def train_model(labelled_epochs_power_bands_df, train_type, model_id, learning_r
     print(f"Using {len(features)} features: {features}")
     label = 'sleep_stage'
 
-    model = xgb.XGBClassifier(
-            objective='binary:logistic',
-            n_estimators=n_estimators,
-            learning_rate=learning_rate,
-            max_depth=max_depth,
-            reg_alpha=lambda_l1,
-            reg_lambda=lambda_l2
-        )
+    model = MLPClassifier(
+        hidden_layer_sizes=(256, 128, 64, 32),
+        activation='relu',
+        solver='adam',
+        learning_rate='adaptive',
+        max_iter=200,
+    )
 
     if train_type == 'rapid':
 

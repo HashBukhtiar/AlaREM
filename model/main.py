@@ -8,13 +8,14 @@ def main():
     model = train_model(
         labelled_epochs_power_bands_df, 
         train_type='rapid',
-        model_id=31,
-        learning_rate=0.01,
-        n_estimators=1000,      
-        max_depth=10,           
-        lambda_l1=0.1,
-        lambda_l2=0.1,
-        use_all_regions=True
+        model_id=32, 
+        use_all_regions=True,
+        use_ratios=True, 
+        hidden_layer_sizes=(100, 50), 
+        activation='relu',
+        solver='adam',
+        max_iter=200,
+        lambda_l2=0.0001 
     )
 
     return
