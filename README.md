@@ -1,5 +1,5 @@
 # AlaREM
-REM Sleep Tracker and alarm for IBEHS 3P04
+The alarm that tracks and classifies your stage of sleep and wakes you up at the optimal time.
 
 Hashim Bukhtiar
 
